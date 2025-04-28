@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('provisions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')->constrained()->onDelete('cascade');
-            $table->foreignId('at_equipment_id')->constrained('at_equipment')->onDelete('cascade');
+            $table->foreignId('at_equipment_id')->constrained('a_t_equipment')->onDelete('cascade');
             $table->date('provision_date');
             $table->text('notes')->nullable();
             $table->timestamps();

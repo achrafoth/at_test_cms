@@ -9,7 +9,7 @@ class ATEquipment extends Model
 {
     use HasFactory;
 
-    protected $table = 'at_equipment';
+    protected $table = 'a_t_equipment';
 
     protected $fillable = [
         'name',
