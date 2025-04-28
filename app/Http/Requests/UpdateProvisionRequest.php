@@ -23,7 +23,7 @@ class UpdateProvisionRequest extends FormRequest
     {
         return [
             'client_id' => ['required', 'exists:clients,id'],
-            'at_equipment_id' => ['required', 'exists:at_equipment,id'],
+            'at_equipment_id' => ['required', 'exists:a_t_equipment,id'],
             'provision_date' => ['required', 'date'],
             'notes' => ['nullable', 'string'],
         ];

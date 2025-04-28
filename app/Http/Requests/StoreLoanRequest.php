@@ -23,7 +23,7 @@ class StoreLoanRequest extends FormRequest
     {
         return [
             'client_id' => ['required', 'exists:clients,id'],
-            'at_equipment_id' => ['required', 'exists:at_equipment,id'],
+            'at_equipment_id' => ['required', 'exists:a_t_equipment,id'],
             'start_date' => ['required', 'date'],
             'expected_return_date' => ['required', 'date', 'after_or_equal:start_date'],
             'actual_return_date' => ['nullable', 'date', 'after_or_equal:start_date'],
