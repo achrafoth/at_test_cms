@@ -90,6 +90,13 @@
                         </div>
                     </div>
 
+                    <div class="mt-6">
+                        <h3 class="text-lg font-semibold mb-2">Total Provision Cost</h3>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <p class="text-xl font-bold">{{ number_format($client->totalProvisionCost(), 2) }} QAR</p>
+                        </div>
+                    </div>
+
                     <div class="mt-8">
                         <h4 class="text-lg font-semibold mb-4">Equipment Provisions</h4>
                         @if($client->provisions && $client->provisions->count() > 0)

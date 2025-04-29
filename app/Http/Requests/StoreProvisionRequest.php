@@ -24,7 +24,9 @@ class StoreProvisionRequest extends FormRequest
         return [
             'client_id' => ['required', 'exists:clients,id'],
             'at_equipment_id' => ['required', 'exists:a_t_equipment,id'],
+            'at_equipment_item_id' => ['nullable', 'exists:a_t_equipment_items,id'],
             'provision_date' => ['required', 'date'],
+            'cost' => ['nullable', 'numeric', 'min:0'],
             'notes' => ['nullable', 'string'],
         ];
     }

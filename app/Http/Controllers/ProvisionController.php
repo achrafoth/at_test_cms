@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Provision;
 use App\Models\Client;
 use App\Models\ATEquipment;
+use App\Models\ATEquipmentItem;
 use App\Http\Requests\StoreProvisionRequest;
 use App\Http\Requests\UpdateProvisionRequest;
+use Illuminate\Http\Request;
 
 class ProvisionController extends Controller
 {
@@ -15,7 +17,7 @@ class ProvisionController extends Controller
      */
     public function index()
     {
-        $provisions = Provision::with(['client', 'equipment'])->latest()->paginate(10);
+        $provisions = Provision::with(['client', 'equipment', 'equipmentItem'])->latest()->paginate(10);
         return view('provisions.index', compact('provisions'));
     }
 
@@ -36,6 +38,12 @@ class ProvisionController extends Controller
     {
         $validated = $request->validated();
         
+        if (!empty($validated['at_equipment_item_id'])) {
+            $equipmentItem = ATEquipmentItem::findOrFail($validated['at_equipment_item_id']);
+            $equipmentItem->status = 'provision';
+            $equipmentItem->save();
+        }
+        
         $provision = Provision::create($validated);
         
         return redirect()->route('provisions.show', $provision)
@@ -47,7 +55,7 @@ class ProvisionController extends Controller
      */
     public function show(Provision $provision)
     {
-        $provision->load(['client', 'equipment']);
+        $provision->load(['client', 'equipment', 'equipmentItem']);
         return view('provisions.show', compact('provision'));
     }
 
@@ -58,7 +66,18 @@ class ProvisionController extends Controller
     {
         $clients = Client::all();
         $equipment = ATEquipment::all();
-        return view('provisions.edit', compact('provision', 'clients', 'equipment'));
+        
+        $equipmentItems = collect();
+        if ($provision->at_equipment_id) {
+            $equipmentItems = ATEquipmentItem::where('at_equipment_id', $provision->at_equipment_id)
+                ->where(function($query) use ($provision) {
+                    $query->where('status', 'available')
+                        ->orWhere('id', $provision->at_equipment_item_id);
+                })
+                ->get();
+        }
+        
+        return view('provisions.edit', compact('provision', 'clients', 'equipment', 'equipmentItems'));
     }
 
     /**
@@ -67,6 +86,22 @@ class ProvisionController extends Controller
     public function update(UpdateProvisionRequest $request, Provision $provision)
     {
         $validated = $request->validated();
+        
+        if ($provision->at_equipment_item_id != $validated['at_equipment_item_id']) {
+            if ($provision->at_equipment_item_id) {
+                $oldItem = ATEquipmentItem::find($provision->at_equipment_item_id);
+                if ($oldItem) {
+                    $oldItem->status = 'available';
+                    $oldItem->save();
+                }
+            }
+            
+            if (!empty($validated['at_equipment_item_id'])) {
+                $newItem = ATEquipmentItem::findOrFail($validated['at_equipment_item_id']);
+                $newItem->status = 'provision';
+                $newItem->save();
+            }
+        }
         
         $provision->update($validated);
         
@@ -79,9 +114,26 @@ class ProvisionController extends Controller
      */
     public function destroy(Provision $provision)
     {
+        if ($provision->at_equipment_item_id) {
+            $item = ATEquipmentItem::find($provision->at_equipment_item_id);
+            if ($item) {
+                $item->status = 'available';
+                $item->save();
+            }
+        }
+        
         $provision->delete();
         
         return redirect()->route('provisions.index')
             ->with('success', 'Provision deleted successfully.');
+    }
+    
+    /**
+     * Get available equipment items for a specific equipment.
+     */
+    public function getAvailableItems(Request $request, ATEquipment $equipment)
+    {
+        $items = $equipment->items()->where('status', 'available')->get();
+        return response()->json($items);
     }
 }

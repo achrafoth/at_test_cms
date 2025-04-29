@@ -53,4 +53,12 @@ class ATEquipment extends Model
     {
         return $this->hasMany(Loan::class, 'at_equipment_id');
     }
+    
+    /**
+     * Get the individual equipment items.
+     */
+    public function items()
+    {
+        return $this->hasMany(ATEquipmentItem::class, 'at_equipment_id');
+    }
 }

@@ -40,6 +40,11 @@
                             </div>
                             
                             <div class="mb-4">
+                                <p class="text-sm font-medium text-gray-500">Cost</p>
+                                <p class="mt-1 text-sm text-gray-900">{{ number_format($provision->cost, 2) }} QAR</p>
+                            </div>
+                            
+                            <div class="mb-4">
                                 <p class="text-sm font-medium text-gray-500">Notes</p>
                                 <p class="mt-1 text-sm text-gray-900">{{ $provision->notes ?? 'N/A' }}</p>
                             </div>

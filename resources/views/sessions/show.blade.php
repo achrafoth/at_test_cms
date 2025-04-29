@@ -99,6 +99,77 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="mt-6">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold mb-2">Provisions</h3>
+                            <div class="flex space-x-2">
+                                <a href="{{ route('sessions.add-provision', $session) }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded text-sm">
+                                    Add Equipment
+                                </a>
+                                <a href="{{ route('sessions.add-software-provision', $session) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm">
+                                    Add Software
+                                </a>
+                                <a href="{{ route('sessions.add-wishlist-item', $session) }}" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-1 px-2 rounded text-sm">
+                                    Add to Wishlist
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Equipment Provisions -->
+                        @if($session->provisions->count() > 0)
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <h4 class="font-medium mb-2">Equipment Provisions</h4>
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Equipment</th>
+                                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Serial Number</th>
+                                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cost</th>
+                                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    @foreach($session->provisions as $provision)
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $provision->equipment->name }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $provision->equipmentItem->serial_number ?? 'N/A' }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ number_format($provision->cost, 2) }} QAR</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $provision->provision_date->format('Y-m-d') }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        @endif
+                        
+                        <!-- Software Provisions -->
+                        @if($session->softwareProvisions->count() > 0)
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-medium mb-2">Software Provisions</h4>
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Software</th>
+                                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Version</th>
+                                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cost</th>
+                                        <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    @foreach($session->softwareProvisions as $softwareProvision)
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $softwareProvision->software->name }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $softwareProvision->software->version ?? 'N/A' }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ number_format($softwareProvision->cost, 2) }} QAR</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $softwareProvision->provision_date->format('Y-m-d') }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>

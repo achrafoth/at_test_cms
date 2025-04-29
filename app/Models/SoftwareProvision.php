@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Provision extends Model
+class SoftwareProvision extends Model
 {
     use HasFactory;
     
@@ -16,8 +17,7 @@ class Provision extends Model
      */
     protected $fillable = [
         'client_id',
-        'at_equipment_id',
-        'at_equipment_item_id',
+        'at_software_id',
         'provision_date',
         'cost',
         'notes',
@@ -34,26 +34,18 @@ class Provision extends Model
     ];
     
     /**
-     * Get the client that owns the provision.
+     * Get the client that owns the software provision.
      */
-    public function client()
+    public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
     }
     
     /**
-     * Get the equipment that is provisioned.
+     * Get the software that is provisioned.
      */
-    public function equipment()
+    public function software(): BelongsTo
     {
-        return $this->belongsTo(ATEquipment::class, 'at_equipment_id');
-    }
-    
-    /**
-     * Get the specific equipment item that is provisioned.
-     */
-    public function equipmentItem()
-    {
-        return $this->belongsTo(ATEquipmentItem::class, 'at_equipment_item_id');
+        return $this->belongsTo(ATSoftware::class, 'at_software_id');
     }
 }

@@ -31,10 +31,22 @@ Route::middleware('auth')->group(function () {
     Route::resource('trusted-specialists', \App\Http\Controllers\TrustedSpecialistController::class);
     Route::resource('at-experts', \App\Http\Controllers\ATExpertController::class);
     Route::resource('at-equipment', \App\Http\Controllers\ATEquipmentController::class);
+    Route::resource('at-equipment.items', \App\Http\Controllers\ATEquipmentItemController::class);
     Route::resource('at-software', \App\Http\Controllers\ATSoftwareController::class);
     Route::resource('provisions', \App\Http\Controllers\ProvisionController::class);
     Route::resource('loans', \App\Http\Controllers\LoanController::class);
     Route::resource('sessions', \App\Http\Controllers\SessionController::class);
+    Route::resource('wishlist-items', \App\Http\Controllers\WishlistItemController::class);
+    Route::resource('software-provisions', \App\Http\Controllers\SoftwareProvisionController::class);
+    
+    Route::get('/sessions/{session}/add-provision', [\App\Http\Controllers\SessionController::class, 'addProvision'])->name('sessions.add-provision');
+    Route::post('/sessions/{session}/provisions', [\App\Http\Controllers\SessionController::class, 'storeProvision'])->name('sessions.store-provision');
+    Route::get('/sessions/{session}/add-software-provision', [\App\Http\Controllers\SessionController::class, 'addSoftwareProvision'])->name('sessions.add-software-provision');
+    Route::post('/sessions/{session}/software-provisions', [\App\Http\Controllers\SessionController::class, 'storeSoftwareProvision'])->name('sessions.store-software-provision');
+    Route::get('/sessions/{session}/add-wishlist-item', [\App\Http\Controllers\SessionController::class, 'addWishlistItem'])->name('sessions.add-wishlist-item');
+    Route::post('/sessions/{session}/wishlist-items', [\App\Http\Controllers\SessionController::class, 'storeWishlistItem'])->name('sessions.store-wishlist-item');
+    
+    Route::get('/provisions/equipment/{equipment}/items', [\App\Http\Controllers\ProvisionController::class, 'getAvailableItems'])->name('provisions.equipment.items');
     
     Route::patch('/loans/{loan}/return', [\App\Http\Controllers\LoanController::class, 'markAsReturned'])->name('loans.return');
     Route::patch('/loans/{loan}/lost', [\App\Http\Controllers\LoanController::class, 'markAsLost'])->name('loans.lost');

@@ -4,10 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSessionRequest;
 use App\Http\Requests\UpdateSessionRequest;
+use App\Models\ATEquipment;
+use App\Models\ATEquipmentItem;
 use App\Models\ATExpert;
+use App\Models\ATSoftware;
 use App\Models\Client;
 use App\Models\ClientSession;
+use App\Models\Provision;
+use App\Models\SoftwareProvision;
 use App\Models\TrustedSpecialist;
+use App\Models\WishlistItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -116,6 +122,148 @@ class SessionController extends Controller
         
         return redirect()->route('sessions.index')
             ->with('success', 'Session deleted successfully.');
+    }
+    
+    /**
+     * Show the form for adding a provision during a session.
+     */
+    public function addProvision(ClientSession $session)
+    {
+        $this->authorizeView($session);
+        
+        $equipment = ATEquipment::all();
+        $equipmentItems = ATEquipmentItem::where('status', 'available')->get();
+        
+        return view('sessions.add-provision', compact('session', 'equipment', 'equipmentItems'));
+    }
+    
+    /**
+     * Store a new provision during a session.
+     */
+    public function storeProvision(Request $request, ClientSession $session)
+    {
+        $this->authorizeView($session);
+        
+        $validated = $request->validate([
+            'at_equipment_id' => 'required|exists:a_t_equipment,id',
+            'at_equipment_item_id' => 'required|exists:at_equipment_items,id',
+            'cost' => 'required|numeric|min:0',
+            'notes' => 'nullable|string',
+        ]);
+        
+        $item = ATEquipmentItem::findOrFail($validated['at_equipment_item_id']);
+        if ($item->status !== 'available') {
+            return back()->withErrors(['error' => 'Selected equipment item is not available.'])
+                        ->withInput();
+        }
+        
+        $item->update(['status' => 'provision']);
+        
+        $provision = new Provision([
+            'client_id' => $session->client_id,
+            'at_equipment_id' => $validated['at_equipment_id'],
+            'at_equipment_item_id' => $validated['at_equipment_item_id'],
+            'provision_date' => now(),
+            'cost' => $validated['cost'],
+            'notes' => $validated['notes'],
+        ]);
+        
+        $provision->save();
+        
+        $session->provisions()->attach($provision->id);
+        
+        return redirect()->route('sessions.show', $session)
+            ->with('success', 'Equipment provision added successfully.');
+    }
+    
+    /**
+     * Show the form for adding a software provision during a session.
+     */
+    public function addSoftwareProvision(ClientSession $session)
+    {
+        $this->authorizeView($session);
+        
+        $software = ATSoftware::all();
+        
+        return view('sessions.add-software-provision', compact('session', 'software'));
+    }
+    
+    /**
+     * Store a new software provision during a session.
+     */
+    public function storeSoftwareProvision(Request $request, ClientSession $session)
+    {
+        $this->authorizeView($session);
+        
+        $validated = $request->validate([
+            'at_software_id' => 'required|exists:a_t_software,id',
+            'cost' => 'required|numeric|min:0',
+            'notes' => 'nullable|string',
+        ]);
+        
+        $softwareProvision = new SoftwareProvision([
+            'client_id' => $session->client_id,
+            'at_software_id' => $validated['at_software_id'],
+            'provision_date' => now(),
+            'cost' => $validated['cost'],
+            'notes' => $validated['notes'],
+        ]);
+        
+        $softwareProvision->save();
+        
+        $session->softwareProvisions()->attach($softwareProvision->id);
+        
+        return redirect()->route('sessions.show', $session)
+            ->with('success', 'Software provision added successfully.');
+    }
+    
+    /**
+     * Show the form for adding a wishlist item during a session.
+     */
+    public function addWishlistItem(ClientSession $session)
+    {
+        $this->authorizeView($session);
+        
+        $equipment = ATEquipment::all();
+        $software = ATSoftware::all();
+        
+        return view('sessions.add-wishlist-item', compact('session', 'equipment', 'software'));
+    }
+    
+    /**
+     * Store a new wishlist item during a session.
+     */
+    public function storeWishlistItem(Request $request, ClientSession $session)
+    {
+        $this->authorizeView($session);
+        
+        $validated = $request->validate([
+            'at_equipment_id' => 'nullable|exists:a_t_equipment,id',
+            'at_software_id' => 'nullable|exists:a_t_software,id',
+            'approximate_value' => 'required|numeric|min:0',
+            'priority' => 'required|in:low,medium,high',
+            'notes' => 'nullable|string',
+        ]);
+        
+        if (empty($validated['at_equipment_id']) && empty($validated['at_software_id'])) {
+            return back()->withErrors(['error' => 'Either equipment or software must be selected'])
+                        ->withInput();
+        }
+        
+        $wishlistItem = new WishlistItem([
+            'client_id' => $session->client_id,
+            'at_equipment_id' => $validated['at_equipment_id'],
+            'at_software_id' => $validated['at_software_id'],
+            'approximate_value' => $validated['approximate_value'],
+            'priority' => $validated['priority'],
+            'requested_by' => Auth::id(),
+            'notes' => $validated['notes'],
+        ]);
+        
+        $wishlistItem->save();
+        
+        return redirect()->route('sessions.show', $session)
+            ->with('success', 'Wishlist item added successfully.');
     }
     
     /**
