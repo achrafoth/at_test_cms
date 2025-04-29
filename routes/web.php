@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('trusted-specialists', \App\Http\Controllers\TrustedSpecialistController::class);
     Route::resource('at-experts', \App\Http\Controllers\ATExpertController::class);
     Route::resource('at-equipment', \App\Http\Controllers\ATEquipmentController::class);
+    Route::resource('at-software', \App\Http\Controllers\ATSoftwareController::class);
     Route::resource('provisions', \App\Http\Controllers\ProvisionController::class);
     Route::resource('loans', \App\Http\Controllers\LoanController::class);
     Route::resource('sessions', \App\Http\Controllers\SessionController::class);

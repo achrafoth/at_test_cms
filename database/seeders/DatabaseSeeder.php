@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             ATCategorySeeder::class,
             SupplierSeeder::class,
             ATEquipmentSeeder::class,
+            ATSoftwareSeeder::class,
             ProvisionSeeder::class,
             LoanSeeder::class,
             SessionSeeder::class,

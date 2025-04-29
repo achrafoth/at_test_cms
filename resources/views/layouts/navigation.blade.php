@@ -27,6 +27,9 @@
                     <x-nav-link :href="route('at-equipment.index')" :active="request()->routeIs('at-equipment.*')">
                         {{ __('Equipment') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('at-software.index')" :active="request()->routeIs('at-software.*')">
+                        {{ __('Software') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('provisions.index')" :active="request()->routeIs('provisions.*')">
                         {{ __('Provisions') }}
                     </x-nav-link>
@@ -102,6 +105,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('at-equipment.index')" :active="request()->routeIs('at-equipment.*')">
                 {{ __('Equipment') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('at-software.index')" :active="request()->routeIs('at-software.*')">
+                {{ __('Software') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('provisions.index')" :active="request()->routeIs('provisions.*')">
                 {{ __('Provisions') }}
