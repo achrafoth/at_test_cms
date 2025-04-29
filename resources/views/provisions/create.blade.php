@@ -46,6 +46,22 @@
                             <x-text-input id="provision_date" class="block mt-1 w-full" type="date" name="provision_date" :value="old('provision_date', date('Y-m-d'))" required />
                             <x-input-error :messages="$errors->get('provision_date')" class="mt-2" />
                         </div>
+                        
+                        <!-- Equipment Item -->
+                        <div class="mb-4 hidden" id="equipment_item_container">
+                            <x-input-label for="at_equipment_item_id" :value="__('Equipment Item')" />
+                            <select id="at_equipment_item_id" name="at_equipment_item_id" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                <option value="">-- Select Equipment Item --</option>
+                            </select>
+                            <x-input-error :messages="$errors->get('at_equipment_item_id')" class="mt-2" />
+                        </div>
+                        
+                        <!-- Cost -->
+                        <div class="mb-4">
+                            <x-input-label for="cost" :value="__('Cost (QAR)')" />
+                            <x-text-input id="cost" class="block mt-1 w-full" type="number" name="cost" :value="old('cost', '0.00')" step="0.01" min="0" />
+                            <x-input-error :messages="$errors->get('cost')" class="mt-2" />
+                        </div>
 
                         <!-- Notes -->
                         <div class="mb-4">
@@ -53,6 +69,38 @@
                             <textarea id="notes" name="notes" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">{{ old('notes') }}</textarea>
                             <x-input-error :messages="$errors->get('notes')" class="mt-2" />
                         </div>
+                        
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const equipmentSelect = document.getElementById('at_equipment_id');
+                                const equipmentItemContainer = document.getElementById('equipment_item_container');
+                                const equipmentItemSelect = document.getElementById('at_equipment_item_id');
+                                
+                                equipmentSelect.addEventListener('change', function() {
+                                    const equipmentId = this.value;
+                                    if (equipmentId) {
+                                        fetch(`/provisions/equipment/${equipmentId}/items`)
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                equipmentItemSelect.innerHTML = '<option value="">-- Select Equipment Item --</option>';
+                                                if (data.length > 0) {
+                                                    data.forEach(item => {
+                                                        const option = document.createElement('option');
+                                                        option.value = item.id;
+                                                        option.textContent = `${item.serial_number || 'No S/N'} - Value: ${item.purchase_value || '0.00'} QAR`;
+                                                        equipmentItemSelect.appendChild(option);
+                                                    });
+                                                    equipmentItemContainer.classList.remove('hidden');
+                                                } else {
+                                                    equipmentItemContainer.classList.add('hidden');
+                                                }
+                                            });
+                                    } else {
+                                        equipmentItemContainer.classList.add('hidden');
+                                    }
+                                });
+                            });
+                        </script>
 
                         <div class="flex items-center justify-end mt-4">
                             <a href="{{ route('provisions.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 active:bg-gray-500 focus:outline-none focus:border-gray-500 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 mr-2">

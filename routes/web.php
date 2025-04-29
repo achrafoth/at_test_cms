@@ -46,6 +46,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/sessions/{session}/add-wishlist-item', [\App\Http\Controllers\SessionController::class, 'addWishlistItem'])->name('sessions.add-wishlist-item');
     Route::post('/sessions/{session}/wishlist-items', [\App\Http\Controllers\SessionController::class, 'storeWishlistItem'])->name('sessions.store-wishlist-item');
     
+    Route::get('/provisions/equipment/{equipment}/items', [\App\Http\Controllers\ProvisionController::class, 'getAvailableItems'])->name('provisions.equipment.items');
+    
     Route::patch('/loans/{loan}/return', [\App\Http\Controllers\LoanController::class, 'markAsReturned'])->name('loans.return');
     Route::patch('/loans/{loan}/lost', [\App\Http\Controllers\LoanController::class, 'markAsLost'])->name('loans.lost');
 });
