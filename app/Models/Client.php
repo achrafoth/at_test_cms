@@ -58,4 +58,28 @@ class Client extends Model
     {
         return $this->hasMany(Loan::class);
     }
+    
+    /**
+     * Get the software provisions for this client.
+     */
+    public function softwareProvisions()
+    {
+        return $this->hasMany(SoftwareProvision::class);
+    }
+    
+    /**
+     * Get the wishlist items for this client.
+     */
+    public function wishlistItems()
+    {
+        return $this->hasMany(WishlistItem::class);
+    }
+    
+    /**
+     * Calculate the total cost of provisions for this client.
+     */
+    public function totalProvisionCost()
+    {
+        return $this->provisions()->sum('cost');
+    }
 }

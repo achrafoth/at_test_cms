@@ -65,4 +65,22 @@ class ClientSession extends Model
     {
         return $this->belongsTo(ATExpert::class);
     }
+    
+    /**
+     * Get the provisions created during this session.
+     */
+    public function provisions()
+    {
+        return $this->belongsToMany(Provision::class, 'session_provisions')
+                    ->withTimestamps();
+    }
+    
+    /**
+     * Get the software provisions created during this session.
+     */
+    public function softwareProvisions()
+    {
+        return $this->belongsToMany(SoftwareProvision::class, 'session_provisions')
+                    ->withTimestamps();
+    }
 }

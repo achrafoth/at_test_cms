@@ -36,6 +36,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('loans', \App\Http\Controllers\LoanController::class);
     Route::resource('sessions', \App\Http\Controllers\SessionController::class);
     
+    Route::get('/sessions/{session}/add-provision', [\App\Http\Controllers\SessionController::class, 'addProvision'])->name('sessions.add-provision');
+    Route::post('/sessions/{session}/provisions', [\App\Http\Controllers\SessionController::class, 'storeProvision'])->name('sessions.store-provision');
+    Route::get('/sessions/{session}/add-software-provision', [\App\Http\Controllers\SessionController::class, 'addSoftwareProvision'])->name('sessions.add-software-provision');
+    Route::post('/sessions/{session}/software-provisions', [\App\Http\Controllers\SessionController::class, 'storeSoftwareProvision'])->name('sessions.store-software-provision');
+    Route::get('/sessions/{session}/add-wishlist-item', [\App\Http\Controllers\SessionController::class, 'addWishlistItem'])->name('sessions.add-wishlist-item');
+    Route::post('/sessions/{session}/wishlist-items', [\App\Http\Controllers\SessionController::class, 'storeWishlistItem'])->name('sessions.store-wishlist-item');
+    
     Route::patch('/loans/{loan}/return', [\App\Http\Controllers\LoanController::class, 'markAsReturned'])->name('loans.return');
     Route::patch('/loans/{loan}/lost', [\App\Http\Controllers\LoanController::class, 'markAsLost'])->name('loans.lost');
 });
