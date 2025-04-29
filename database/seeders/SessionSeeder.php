@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Client;
-use App\Models\Session;
+use App\Models\ClientSession;
 use App\Models\TrustedSpecialist;
 use App\Models\ATExpert;
 use Carbon\Carbon;
@@ -26,7 +26,7 @@ class SessionSeeder extends Seeder
             $specialist = $specialists->random();
             $expert = $i % 2 === 0 ? $experts->random() : null; // Only assign expert to half of the sessions
             
-            Session::create([
+            ClientSession::create([
                 'client_id' => $client->id,
                 'trusted_specialist_id' => $specialist->id,
                 'at_expert_id' => $expert ? $expert->id : null,

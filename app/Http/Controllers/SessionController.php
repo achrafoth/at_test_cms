@@ -6,7 +6,7 @@ use App\Http\Requests\StoreSessionRequest;
 use App\Http\Requests\UpdateSessionRequest;
 use App\Models\ATExpert;
 use App\Models\Client;
-use App\Models\Session;
+use App\Models\ClientSession;
 use App\Models\TrustedSpecialist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +18,7 @@ class SessionController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Session::with(['client', 'trustedSpecialist', 'atExpert']);
+        $query = ClientSession::with(['client', 'trustedSpecialist', 'atExpert']);
         
         if ($request->has('client_id')) {
             $query->where('client_id', $request->client_id);
@@ -61,7 +61,7 @@ class SessionController extends Controller
      */
     public function store(StoreSessionRequest $request)
     {
-        $session = Session::create($request->validated());
+        $session = ClientSession::create($request->validated());
         
         return redirect()->route('sessions.show', $session)
             ->with('success', 'Session created successfully.');
@@ -70,7 +70,7 @@ class SessionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Session $session)
+    public function show(ClientSession $session)
     {
         $this->authorizeView($session);
         
@@ -80,7 +80,7 @@ class SessionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Session $session)
+    public function edit(ClientSession $session)
     {
         $this->authorizeView($session);
         
@@ -95,7 +95,7 @@ class SessionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSessionRequest $request, Session $session)
+    public function update(UpdateSessionRequest $request, ClientSession $session)
     {
         $this->authorizeView($session);
         
@@ -108,7 +108,7 @@ class SessionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Session $session)
+    public function destroy(ClientSession $session)
     {
         $this->authorizeView($session);
         
@@ -121,7 +121,7 @@ class SessionController extends Controller
     /**
      * Check if the current user is authorized to view/edit/delete the session.
      */
-    private function authorizeView(Session $session)
+    private function authorizeView(ClientSession $session)
     {
         $user = Auth::user();
         
