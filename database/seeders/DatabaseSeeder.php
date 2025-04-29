@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             ATEquipmentSeeder::class,
             ProvisionSeeder::class,
             LoanSeeder::class,
+            SessionSeeder::class,
         ]);
     }
 }

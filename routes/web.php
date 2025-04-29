@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('at-equipment', \App\Http\Controllers\ATEquipmentController::class);
     Route::resource('provisions', \App\Http\Controllers\ProvisionController::class);
     Route::resource('loans', \App\Http\Controllers\LoanController::class);
+    Route::resource('sessions', \App\Http\Controllers\SessionController::class);
     
     Route::patch('/loans/{loan}/return', [\App\Http\Controllers\LoanController::class, 'markAsReturned'])->name('loans.return');
     Route::patch('/loans/{loan}/lost', [\App\Http\Controllers\LoanController::class, 'markAsLost'])->name('loans.lost');
