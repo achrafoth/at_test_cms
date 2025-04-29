@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('software_provision_id')->nullable()->constrained('software_provisions')->onDelete('cascade');
             $table->timestamps();
             
-            $table->check('(provision_id IS NOT NULL OR software_provision_id IS NOT NULL)');
         });
     }
 

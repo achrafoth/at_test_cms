@@ -22,7 +22,6 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
             
-            $table->check('(at_equipment_id IS NOT NULL OR at_software_id IS NOT NULL)');
         });
     }
 

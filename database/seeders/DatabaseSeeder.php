@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
             SupplierSeeder::class,
             ATEquipmentSeeder::class,
             ATSoftwareSeeder::class,
-            ProvisionSeeder::class,
-            LoanSeeder::class,
-            SessionSeeder::class,
+            // ProvisionSeeder::class,
+            // LoanSeeder::class,
+            // SessionSeeder::class,
         ]);
     }
 }
